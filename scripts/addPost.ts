@@ -1,27 +1,14 @@
 import fs from "fs";
-import { userInfo } from "os";
+import { getNewPost } from "../templates"
 
 function main() {
-    const currentTime = new Date().toISOString();
-    const userName = userInfo().username || "User Name"
-    const frontmatter =`---
-title: Blog post title
-date: ${currentTime}
-author: ${userName}
-categories:
-- category name
-tags:
-- tag name
----
-
-`;
-    const filename = `${currentTime}.md`;
-    fs.writeFile(`${process.cwd()}/data/${filename}`, frontmatter, (err) => {
+    const { template, filename } = getNewPost();
+    fs.writeFile(`${process.cwd()}/data/${filename}`, template, (err) => {
         if (err) {
             console.error(err);
         }
         console.log(`The new post is named: ${filename}`);
-    })
+    });
 }
 
 main();

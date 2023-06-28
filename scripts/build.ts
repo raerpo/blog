@@ -1,20 +1,22 @@
 import fs from "fs";
-import path from "path";
 import showdown from "showdown";
+import { getIndex } from "../templates";
+import { getFilesInFolder } from "../utils";
+import { CONTENT_PATH, DATA_PATH } from "../constants";
 
-function getFilesInFolder(folderPath: string): string[] {
-  try {
-    const files = fs.readdirSync(folderPath);
-    return files.map((file) => path.join(folderPath, file));
-  } catch (err) {
-    console.error("An error occurred:", err);
-    return [];
-  }
+function createIndex() {
+  const { template } = getIndex();
+  fs.writeFile(`${CONTENT_PATH}index.html`, template, (err) => {
+      if (err) {
+          console.error(err);
+      }
+      console.log(`index.html created!`);
+  });
 }
 
-function main() {
+function compilePosts() {
   const converter = new showdown.Converter();
-  const files = getFilesInFolder(`${process.cwd()}/data`);
+  const files = getFilesInFolder(DATA_PATH);
 
   files.forEach((file) => {
     fs.readFile(file, 'utf-8', (err, fileContent) => {
@@ -26,15 +28,23 @@ function main() {
             if (filename === undefined) {
                 throw new Error(`Couldn't get the file name of path "${file}"`);
             }
-            fs.writeFile(`${process.cwd()}/content/${filename.replace(".md", ".html")}`, htmlPost, (err) => {
+            const htmlFilename = filename.replace(".md", ".html");
+            fs.writeFile(`${CONTENT_PATH}${htmlFilename}`, htmlPost, (err) => {
                 if (err) {
                     console.error(err);
                 }
-                console.log(`${filename} published!`);
+                console.log(`${htmlFilename} created!`);
             })
         }
     });
   })
+}
 
+function main() {
+  if (!fs.existsSync(CONTENT_PATH)) {
+    fs.mkdirSync(CONTENT_PATH);
+  }
+  compilePosts();
+  createIndex();
 }
 main();
