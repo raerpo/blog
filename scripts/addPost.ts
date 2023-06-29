@@ -3,11 +3,12 @@ import { getNewPost } from "../templates"
 
 function main() {
     const { template, filename } = getNewPost();
-    fs.writeFile(`${process.cwd()}/data/${filename}`, template, (err) => {
+    const filePath = `${process.cwd()}/data/${filename}`;
+    fs.writeFile(filePath, template, (err) => {
         if (err) {
             console.error(err);
         }
-        console.log(`The new post is named: ${filename}`);
+        console.log(`The new post is located here:\n${filePath}`);
     });
 }
 

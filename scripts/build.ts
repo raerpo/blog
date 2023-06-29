@@ -1,8 +1,9 @@
 import fs from "fs";
 import showdown from "showdown";
+import frontmatter from "front-matter";
 import { getIndex } from "../templates";
 import { getFilesInFolder } from "../utils";
-import { CONTENT_PATH, DATA_PATH } from "../constants";
+import { CONTENT_PATH, DATA_PATH } from "../config";
 
 function createIndex() {
   const { template } = getIndex();
@@ -23,7 +24,8 @@ function compilePosts() {
         if (err) {
             console.error('An error occurred:', err);
         } else {
-            const htmlPost = converter.makeHtml(fileContent);
+          const { body, attributes } = frontmatter(fileContent);
+            const htmlPost = converter.makeHtml(body);
             const filename = file.split('/').at(-1);
             if (filename === undefined) {
                 throw new Error(`Couldn't get the file name of path "${file}"`);

@@ -1,17 +1,17 @@
 import os from "os";
+import fs from "fs";
+import frontmatter from "front-matter";
 import { getFilesInFolder } from "../utils";
-import { DATA_PATH } from "../constants";
+import { DATA_PATH, BODY_PREVIEW_LENGTH } from "../config";
+import { Frontmatter } from "../types";
 
 export const getNewPost = () => {
   const currentTime = new Date().toISOString();
   const userName = os.userInfo().username || "User Name";
-  const template = `
----
+  const template = `---
 title: Blog post title
-date: ${currentTime}
 author: ${userName}
-categories:
-- category name
+category: category name (used to create series)
 tags:
 - tag name
 ---
@@ -24,9 +24,25 @@ tags:
 };
 
 export const getIndex = () => {
-  const files = getFilesInFolder(DATA_PATH)
-    .map((filepath) => filepath.split("/").at(-1)!)
-    .map((markdownFileName) => markdownFileName.replace(".md", ""));
+  const filesPaths = getFilesInFolder(DATA_PATH);
+
+  const filesData = filesPaths.map(filePath => {
+    const { birthtime: created, mtime: updated } = fs.statSync(filePath);
+    const fileContent = fs.readFileSync(filePath, "utf-8");
+    const { attributes, body } = frontmatter(fileContent);
+    const { title, author, tags } = attributes as Frontmatter;
+    return {
+      created,
+      updated,
+      path: filePath,
+      filename: filePath.split("/").at(-1)!.replace(".md", ""),
+      preview: body.substring(0, BODY_PREVIEW_LENGTH),
+      title,
+      author,
+      tags
+    }
+  })
+
 
   const template = `
 <!DOCTYPE html>
@@ -39,7 +55,13 @@ export const getIndex = () => {
 <body>
     <h2>Blog Timeline</h2>
     <ul>
-        ${files.map((file) => `<li><a href="/${file}.html">${file}</a></li>`)}
+        ${filesData.map(({ filename, created, updated, title, preview }) => `<li>
+            <a href="/${filename}.html">
+              <small>${created}</small>
+              <h3>${title}</h3>
+              <p>${preview}...</p>
+            </a>
+        </li>`).join("")}
     </ul>
 </body>
 </html>
