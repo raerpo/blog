@@ -39,7 +39,7 @@ export const getIndex = () => {
 <body>
     <h2>Blog Timeline</h2>
     <ul>
-        ${files.map((file) => `<li><a href="/${file}">${file}</a></li>`)}
+        ${files.map((file) => `<li><a href="/${file}.html">${file}</a></li>`)}
     </ul>
 </body>
 </html>
