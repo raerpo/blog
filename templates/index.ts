@@ -41,31 +41,17 @@ export const getIndex = () => {
       author,
       tags
     }
-  })
+  });
 
-
-  const template = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raerpo's Blog</title>
-</head>
-<body>
-    <h2>Blog Timeline</h2>
-    <ul>
-        ${filesData.map(({ filename, created, updated, title, preview }) => `<li>
-            <a href="/${filename}.html">
-              <small>${created}</small>
-              <h3>${title}</h3>
-              <p>${preview}...</p>
-            </a>
-        </li>`).join("")}
-    </ul>
-</body>
-</html>
-`;
+  const indexTemplate = fs.readFileSync(`${process.cwd()}/templates/index.html`, "utf-8");
+  const postContent = filesData.map(({ filename, created, updated, title, preview }) => `<li class="m-8 list-none border-2 rounded-lg p-2">
+    <a href="/${filename}.html">
+      <small>${created}</small>
+      <h3>${title}</h3>
+      <p>${preview}...</p>
+    </a>
+  </li>`).join("");
+  const template = indexTemplate.replace("{%% content %%}", postContent);
 
   return {
     template,
