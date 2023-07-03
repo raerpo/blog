@@ -7,9 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "new": "ts-node scripts/addPost.ts",
     "build:css": "npx tailwindcss -i ./styles/index.css -o ./dist/styles.css",
-    "build": "ts-node scripts/build.ts",
+    "build": "npm run build:css && ts-node scripts/build.ts",
     "server": "http-server dist",
-    "start": "npm run build:css && npm run build && npm run server"
+    "start": "npm run build && npm run server"
   },
   "keywords": [],
   "author": "",
