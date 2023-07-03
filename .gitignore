@@ -29,6 +29,9 @@ yarn.lock
 *.js
 *.js.map
 
+# Exclude tailwind.config.js
+!tailwind.config.js
+
 # Miscellaneous
 .DS_Store
 Thumbs.db
