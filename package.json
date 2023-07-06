@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "new": "ts-node scripts/addPost.ts",
     "build:css": "npx tailwindcss -i ./styles/index.css -o ./public/styles.css",
+    "compile": "npm run build:css && ts-node scripts/build.ts",
     "build": "echo \"build is no needed since the public folder already has the builded content\" && exit 0",
     "commit:build": "ts-node scripts/commitBuild.ts",
     "server": "http-server public",
