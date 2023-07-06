@@ -6,11 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "new": "ts-node scripts/addPost.ts",
-    "build:css": "npx tailwindcss -i ./styles/index.css -o ./dist/styles.css",
+    "build:css": "npx tailwindcss -i ./styles/index.css -o ./public/styles.css",
     "build": "npm run build:css && ts-node scripts/build.ts",
-    "server": "http-server dist",
+    "commit:build": "ts-node scripts/commitBuild.ts",
+    "server": "http-server public",
     "start": "npm run build && npm run server"
   },
+  "post-commit": [
+    "commit:build"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -19,6 +23,7 @@
     "front-matter": "^4.0.2",
     "http-server": "^14.1.1",
     "nodemon": "^2.0.22",
+    "post-commit": "^0.0.1",
     "showdown": "^2.1.0",
     "tailwindcss": "^3.3.2",
     "ts-node": "^10.9.1",

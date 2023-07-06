@@ -11,5 +11,4 @@ function main() {
         console.log(`The new post is located here:\n${filePath}`);
     });
 }
-
 main();

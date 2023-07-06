@@ -3,7 +3,7 @@ import showdown from "showdown";
 import frontmatter from "front-matter";
 import { getIndex } from "../templates";
 import { getFilesInFolder } from "../utils";
-import { CONTENT_PATH, DATA_PATH } from "../config";
+import { CONTENT_PATH, DATA_PATH, TEMPLATES_PATH } from "../config";
 import { Frontmatter } from "../types";
 
 function createIndex() {
@@ -27,7 +27,7 @@ function compilePosts() {
         } else {
           const { body, attributes } = frontmatter<Frontmatter>(fileContent);
             const htmlPost = converter.makeHtml(body);
-            const postTemplate = fs.readFileSync(`${process.cwd()}/templates/post.html`, "utf-8");
+            const postTemplate = fs.readFileSync(`${TEMPLATES_PATH}/post.html`, "utf-8");
             const postContent = postTemplate.replaceAll("{%% title %%}", attributes.title).replaceAll("{%% content %%}", htmlPost);
             const filename = file.split('/').at(-1);
             if (filename === undefined) {
